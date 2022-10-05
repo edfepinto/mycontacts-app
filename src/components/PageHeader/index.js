@@ -9,8 +9,8 @@ export default function PageHeader({ title }) {
   return (
     <Container>
       <Link to="/">
-        <img src={arrow} alt="come back" />
-        <span>Come Back</span>
+        <img src={arrow} alt="Back" />
+        <span>Back</span>
       </Link>
       <h1>{title}</h1>
     </Container>
