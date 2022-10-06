@@ -17,7 +17,7 @@ export default function ContactForm({ buttonLabel }) {
   const [category, setCategory] = useState('');
   const [errors, setErrors] = useState([]);
 
-  const handleNameChange = (event) => {
+  function handleNameChange(event) {
     setName(event.target.value);
 
     if (!event.target.value) {
@@ -30,12 +30,12 @@ export default function ContactForm({ buttonLabel }) {
         (error) => error.field !== 'name',
       ));
     }
-  };
+  }
 
-  const handleEmailChange = (event) => {
+  function handleEmailChange(event) {
     setEmail(event.target.value);
 
-    if (event.target.value && !isEmailValid()) {
+    if (event.target.value && !isEmailValid(event.target.value)) {
       const errorAlreadyExists = errors.find((error) => (
         error.field === 'email'));
 
@@ -50,14 +50,19 @@ export default function ContactForm({ buttonLabel }) {
         (error) => error.field !== 'email',
       ));
     }
-  };
+  }
+
+  function getErrorMessageByFieldName(fieldName) {
+    return errors.find((error) => error.field === fieldName)?.message;
+  }
 
   const handleSubmit = (event) => event.preventDefault();
 
   return (
     <Form onSubmit={handleSubmit}>
-      <FormGroup>
+      <FormGroup error={getErrorMessageByFieldName('name')}>
         <Input
+          error={getErrorMessageByFieldName('name')}
           type="text"
           placeholder="Name"
           value={name}
@@ -65,8 +70,9 @@ export default function ContactForm({ buttonLabel }) {
         />
       </FormGroup>
 
-      <FormGroup>
+      <FormGroup error={getErrorMessageByFieldName('email')}>
         <Input
+          error={getErrorMessageByFieldName('email')}
           type="text"
           placeholder="E-mail"
           value={email}
