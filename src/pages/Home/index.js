@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
@@ -12,6 +12,11 @@ import trash from '../../assets/images/svg/icons/trash.svg';
 export default function Home() {
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState('asc');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredContacts = useMemo(() => contacts.filter((contact) => (
+    contact.name.toLowerCase().includes(searchTerm)
+  )), [contacts, searchTerm]);
 
   useEffect(() => {
     fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
@@ -30,31 +35,40 @@ export default function Home() {
     );
   }
 
+  function handleChangeSearchTerm(event) {
+    setSearchTerm(event.target.value);
+  }
+
   return (
     <Container>
       <InputSearchContainer>
         <input
           type="text"
           placeholder="Search contact"
+          value={searchTerm}
+          onChange={handleChangeSearchTerm}
         />
       </InputSearchContainer>
 
       <Header>
         <strong>
-          {contacts.length}
-          {contacts.length === 1 ? ' contact' : ' contacts'}
+          {filteredContacts.length}
+          {filteredContacts.length === 1 ? ' contact' : ' contacts'}
         </strong>
         <Link to="/new">New Contact</Link>
       </Header>
 
-      <ListHeader orderBy={orderBy}>
-        <button type="button" onClick={handleToggleOrderBy}>
-          <span>Name</span>
-          <img src={arrow} alt="ordernation button" />
-        </button>
-      </ListHeader>
+      {filteredContacts.length > 0
+        && (
+          <ListHeader orderBy={orderBy}>
+            <button type="button" onClick={handleToggleOrderBy}>
+              <span>Name</span>
+              <img src={arrow} alt="ordernation button" />
+            </button>
+          </ListHeader>
+        )}
 
-      {contacts.map((contact) => (
+      {filteredContacts.map((contact) => (
         <Card key={contact.id}>
           <div className="info">
             <div className="contact-name">
