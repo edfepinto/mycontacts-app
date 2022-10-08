@@ -11,7 +11,7 @@ import trash from '../../assets/images/svg/icons/trash.svg';
 
 import Loader from '../../components/Loader';
 
-import delay from '../../utils/delay';
+import ContactsService from '../../services/ContactsService';
 
 export default function Home() {
   const [contacts, setContacts] = useState([]);
@@ -24,20 +24,21 @@ export default function Home() {
   )), [contacts, searchTerm]);
 
   useEffect(() => {
-    setIsLoading(true);
+    async function loadContacts() {
+      try {
+        setIsLoading(true);
 
-    fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
-      .then(async (response) => {
-        await delay(500);
-        const json = await response.json();
-        setContacts(json);
-      })
-      .catch((error) => {
-        console.log('Internal Server Error', error);
-      })
-      .finally(() => {
+        const contactsList = await ContactsService.listContacts(orderBy);
+
+        setContacts(contactsList);
+      } catch (error) {
+        console.log('Internal error server', error);
+      } finally {
         setIsLoading(false);
-      });
+      }
+    }
+
+    loadContacts();
   }, [orderBy]);
 
   function handleToggleOrderBy() {
