@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable no-nested-ternary */
 import {
   useEffect,
   useState,
@@ -13,12 +15,14 @@ import {
   Card,
   InputSearchContainer,
   ErrorContainer,
+  EmptyListContainer,
 } from './styles';
 
 import arrow from '../../assets/images/svg/icons/arrow.svg';
 import edit from '../../assets/images/svg/icons/edit.svg';
 import trash from '../../assets/images/svg/icons/trash.svg';
 import sad from '../../assets/images/svg/sad.svg';
+import emptyBox from '../../assets/images/svg/empty-box.svg';
 
 import Loader from '../../components/Loader';
 import Button from '../../components/Button';
@@ -73,17 +77,29 @@ export default function Home() {
     <Container>
       <Loader isLoading={isLoading} />
 
-      <InputSearchContainer>
-        <input
-          type="text"
-          placeholder="Search contact"
-          value={searchTerm}
-          onChange={handleChangeSearchTerm}
-        />
-      </InputSearchContainer>
+      {contacts.length > 0 && (
+        <InputSearchContainer>
+          <input
+            type="text"
+            placeholder="Search contact"
+            value={searchTerm}
+            onChange={handleChangeSearchTerm}
+          />
+        </InputSearchContainer>
+      )}
 
-      <Header hasError={hasError}>
-        {!hasError && (
+      <Header
+        justifyContent={
+          hasError
+            ? 'flex-end'
+            : (
+              contacts.length > 0
+                ? 'space-between'
+                : 'center'
+            )
+        }
+      >
+        {(!hasError && contacts.length > 0) && (
           <strong>
             {filteredContacts.length}
             {filteredContacts.length === 1 ? ' contact' : ' contacts'}
@@ -92,58 +108,81 @@ export default function Home() {
         <Link to="/new">New Contact</Link>
       </Header>
 
-      {hasError && (
-        <ErrorContainer>
-          <img
-            src={sad}
-            alt="sad smile because of an error that occurred"
-          />
-          <div className="details">
-            <strong>There was an error getting your contacts!</strong>
-            <Button type="button" onClick={handleTryAgain}>
-              Try again
-            </Button>
-          </div>
-        </ErrorContainer>
-      )}
+      {
+        hasError && (
+          <ErrorContainer>
+            <img
+              src={sad}
+              alt="sad smile because of an error that occurred"
+            />
+            <div className="details">
+              <strong>There was an error getting your contacts!</strong>
+              <Button type="button" onClick={handleTryAgain}>
+                Try again
+              </Button>
+            </div>
+          </ErrorContainer>
+        )
+      }
 
-      {!hasError && (
-        <>
-          {filteredContacts.length > 0
-            && (
-              <ListHeader orderBy={orderBy}>
-                <button type="button" onClick={handleToggleOrderBy}>
-                  <span>Name</span>
-                  <img src={arrow} alt="ordernation button" />
-                </button>
-              </ListHeader>
+      {
+        !hasError && (
+          <>
+            {(contacts.length < 1 && !isLoading) && (
+              <EmptyListContainer>
+                <img
+                  src={emptyBox}
+                  alt="empty box because there are no contacts"
+                />
+
+                <p>
+                  You don't have any contact registered yet!
+                  {' '}
+                  <br />
+                  Click on the
+                  {' '}
+                  <strong>"new contact"</strong>
+                  {' '}
+                  button at the top to register a contact.
+                </p>
+              </EmptyListContainer>
             )}
+            {filteredContacts.length > 0
+              && (
+                <ListHeader orderBy={orderBy}>
+                  <button type="button" onClick={handleToggleOrderBy}>
+                    <span>Name</span>
+                    <img src={arrow} alt="ordernation button" />
+                  </button>
+                </ListHeader>
+              )}
 
-          {filteredContacts.map((contact) => (
-            <Card key={contact.id}>
-              <div className="info">
-                <div className="contact-name">
-                  <strong>{contact.name}</strong>
-                  {contact.category_name && (
-                    <small>{contact.category_name}</small>
-                  )}
+            {filteredContacts.map((contact) => (
+              <Card key={contact.id}>
+                <div className="info">
+                  <div className="contact-name">
+                    <strong>{contact.name}</strong>
+                    {contact.category_name && (
+                      <small>{contact.category_name}</small>
+                    )}
+                  </div>
+                  <span>{contact.email}</span>
+                  <span>{contact.phone}</span>
                 </div>
-                <span>{contact.email}</span>
-                <span>{contact.phone}</span>
-              </div>
 
-              <div className="actions">
-                <Link to={`/edit/${contact.id}`}>
-                  <img src={edit} alt="edit contact" />
-                </Link>
-                <button type="button">
-                  <img src={trash} alt="delete contact" />
-                </button>
-              </div>
-            </Card>
-          ))}
-        </>
-      )}
+                <div className="actions">
+                  <Link to={`/edit/${contact.id}`}>
+                    <img src={edit} alt="edit contact" />
+                  </Link>
+                  <button type="button">
+                    <img src={trash} alt="delete contact" />
+                  </button>
+                </div>
+              </Card>
+            ))}
+          </>
+        )
+      }
     </Container>
   );
 }
