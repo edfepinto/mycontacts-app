@@ -16,6 +16,7 @@ import {
   InputSearchContainer,
   ErrorContainer,
   EmptyListContainer,
+  SearchNotFoundContainer,
 } from './styles';
 
 import arrow from '../../assets/images/svg/icons/arrow.svg';
@@ -23,6 +24,7 @@ import edit from '../../assets/images/svg/icons/edit.svg';
 import trash from '../../assets/images/svg/icons/trash.svg';
 import sad from '../../assets/images/svg/sad.svg';
 import emptyBox from '../../assets/images/svg/empty-box.svg';
+import magnifierQuestion from '../../assets/images/svg/magnifier-question.svg';
 
 import Loader from '../../components/Loader';
 import Button from '../../components/Button';
@@ -147,6 +149,22 @@ export default function Home() {
                 </p>
               </EmptyListContainer>
             )}
+
+            {(contacts.length > 0 && filteredContacts.length < 1) && (
+              <SearchNotFoundContainer>
+                <img
+                  src={magnifierQuestion}
+                  alt="magnifying glass for result not found"
+                />
+
+                <span>
+                  No results found for
+                  {' '}
+                  <strong>{searchTerm}</strong>
+                </span>
+              </SearchNotFoundContainer>
+            )}
+
             {filteredContacts.length > 0
               && (
                 <ListHeader orderBy={orderBy}>
