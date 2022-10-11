@@ -16,7 +16,7 @@ export default function Button({
       disabled={disabled || isLoading}
     >
       {!isLoading && children}
-      {isLoading && <Spinner />}
+      {isLoading && <Spinner size={16} />}
     </StyledButton>
   );
 }
