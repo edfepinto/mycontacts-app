@@ -28,6 +28,7 @@ import magnifierQuestion from '../../assets/images/svg/magnifier-question.svg';
 
 import Loader from '../../components/Loader';
 import Button from '../../components/Button';
+import Modal from '../../components/Modal';
 
 import ContactsService from '../../services/ContactsService';
 
@@ -77,7 +78,17 @@ export default function Home() {
 
   return (
     <Container>
-      <Loader isLoading={isLoading} />
+      <Loader
+        isLoading={isLoading}
+      />
+
+      {/* <Modal
+        danger
+        title="Delete Contact"
+        confirmLabel="Delete"
+        onCancel={() => alert('canceled')}
+        onConfirm={() => alert('confirmed')}
+      /> */}
 
       {contacts.length > 0 && (
         <InputSearchContainer>
