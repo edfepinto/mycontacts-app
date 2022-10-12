@@ -138,14 +138,14 @@ export default function Home() {
                 />
 
                 <p>
-                  You don't have any contact registered yet!
+                  You don't have any contact created yet!
                   {' '}
                   <br />
                   Click on the
                   {' '}
                   <strong>"new contact"</strong>
                   {' '}
-                  button at the top to register a contact.
+                  button at the top to create a contact.
                 </p>
               </EmptyListContainer>
             )}
