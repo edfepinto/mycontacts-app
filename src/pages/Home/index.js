@@ -5,10 +5,8 @@ import { Link } from 'react-router-dom';
 
 import {
   Container,
-  Header,
   ListHeader,
   Card,
-  InputSearchContainer,
   ErrorContainer,
   EmptyListContainer,
   SearchNotFoundContainer,
@@ -24,6 +22,8 @@ import magnifierQuestion from '../../assets/images/svg/magnifier-question.svg';
 import Loader from '../../components/Loader';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
+import InputSearch from './components/InputSearch';
+import Header from './components/Header';
 
 import useHome from './useHome';
 
@@ -32,18 +32,18 @@ export default function Home() {
     isLoading,
     isLoadingDelete,
     isDeleteModalVisible,
+    filteredContacts,
     contactBeingDeleted,
+    contacts,
     handleCloseDeleteModal,
     handleConfirmDeleteContact,
-    contacts,
-    searchTerm,
     handleChangeSearchTerm,
-    hasError,
-    handleTryAgain,
-    filteredContacts,
-    orderBy,
     handleToggleOrderBy,
     handleDeleteContact,
+    handleTryAgain,
+    searchTerm,
+    hasError,
+    orderBy,
   } = useHome();
 
   return (
@@ -52,48 +52,18 @@ export default function Home() {
         isLoading={isLoading}
       />
 
-      <Modal
-        isLoading={isLoadingDelete}
-        danger
-        visible={isDeleteModalVisible}
-        title={`Are you sure you want to remove the contact "${contactBeingDeleted?.name}" ?`}
-        confirmLabel="Delete"
-        onCancel={handleCloseDeleteModal}
-        onConfirm={handleConfirmDeleteContact}
-      >
-        <p>This action cannot be undone!</p>
-      </Modal>
-
       {contacts.length > 0 && (
-        <InputSearchContainer>
-          <input
-            type="text"
-            placeholder="Search contact"
-            value={searchTerm}
-            onChange={handleChangeSearchTerm}
-          />
-        </InputSearchContainer>
+        <InputSearch
+          value={searchTerm}
+          onChange={handleChangeSearchTerm}
+        />
       )}
 
       <Header
-        justifyContent={
-          hasError
-            ? 'flex-end'
-            : (
-              contacts.length > 0
-                ? 'space-between'
-                : 'center'
-            )
-        }
-      >
-        {(!hasError && contacts.length > 0) && (
-          <strong>
-            {filteredContacts.length}
-            {filteredContacts.length === 1 ? ' contact' : ' contacts'}
-          </strong>
-        )}
-        <Link to="/new">New Contact</Link>
-      </Header>
+        hasError={hasError}
+        qtyOfContacts={contacts.length}
+        qtyOfFilteredContacts={filteredContacts.length}
+      />
 
       {
         hasError && (
@@ -186,6 +156,18 @@ export default function Home() {
                 </div>
               </Card>
             ))}
+
+            <Modal
+              isLoading={isLoadingDelete}
+              danger
+              visible={isDeleteModalVisible}
+              title={`Are you sure you want to remove the contact "${contactBeingDeleted?.name}" ?`}
+              confirmLabel="Delete"
+              onCancel={handleCloseDeleteModal}
+              onConfirm={handleConfirmDeleteContact}
+            >
+              <p>This action cannot be undone!</p>
+            </Modal>
           </>
         )
       }
