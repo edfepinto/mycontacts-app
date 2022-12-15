@@ -44,7 +44,7 @@ const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
         <Input
           error={getErrorMessageByFieldName('email')}
           type="email"
-          placeholder="E-mail *"
+          placeholder="E-mail"
           value={email}
           onChange={handleEmailChange}
           disabled={isSubmitting}
