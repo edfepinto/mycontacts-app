@@ -12,7 +12,6 @@ export default function useAnimetedUnmount(visible) {
     }
 
     const elementRef = animetedElementRef.current;
-
     if (!visible && elementRef) {
       elementRef.addEventListener('animationend', handleAnimationEnd);
     }
