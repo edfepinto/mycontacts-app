@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import PropTypes from 'prop-types';
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import arrow from '../../../../assets/images/svg/icons/arrow.svg';
@@ -8,7 +9,7 @@ import trash from '../../../../assets/images/svg/icons/trash.svg';
 
 import { ListHeader, Card } from './styles';
 
-export default function ContactsList({
+function ContactsList({
   filteredContacts,
   orderBy,
   onToggleOrderBy,
@@ -70,3 +71,5 @@ ContactsList.propTypes = {
   onToggleOrderBy: PropTypes.func.isRequired,
   onDeleteContact: PropTypes.func.isRequired,
 };
+
+export default memo(ContactsList);
