@@ -18,6 +18,7 @@
   },
   "plugins": ["react", "react-hooks"],
   "rules": {
+    "react/require-default-props": "off",
     "react/jsx-filename-extension": [
       1,
       {
